@@ -1,0 +1,215 @@
+
+body {
+    
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.nav{
+
+    display: flex;
+    background-color: rgb(21, 52, 80);
+    height: 150px;
+    justify-content: space-evenly; 
+}
+
+.box1{
+    color: black;
+    width: 100px;
+    height: 100px;
+    background-color:#74b94f;
+    margin: 20px;
+}
+
+.box2{
+    display: flex;
+    justify-content: center;
+    width:1700px;
+    height: 100px;
+    background-color:rgb(20, 59, 80);
+    margin: 20px;    
+}
+
+.bos{
+    background-color: rgb(20, 59, 83);
+    color: white;  
+    width: 97%;
+    margin-top:20px ;
+    margin-bottom: 20px;
+}
+
+.vv{
+    text-align: center;
+    font-size: 60px;
+}
+
+.box3{
+    color: white;
+    text-align: center;
+    width: 100px;
+    height: 100px;
+    background-color: #74b94f;
+    margin: 20px;
+}
+
+.panel{
+    background-color:rgb(21, 60, 86);
+    height: 10px;
+}
+
+.hero-img{
+    background-image: url("photo3.jpg");
+    background-size: cover;
+    height: 150px;
+    display: flex;
+    width: 100%;
+    justify-content: left;
+    align-items: flex-end;
+    border: 2px solid green;    
+}
+
+.shop-section{
+    color: white;
+    display: flex;
+    justify-content: space-evenly;
+    background-color: lightgray;
+    flex-wrap: wrap;    
+}
+
+.box{
+    color: white;
+    font-size: 30px;
+    height: 390px;
+    width: 370px;
+    border: 2px solid #000000;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.boxx1{
+    background-image: url(photo6.jpg);
+    background-size: cover;
+}
+
+.boxx2{
+    background-image: url(photo5.jpg);
+    background-size: cover;
+}
+
+.boxx3{
+    background-image: url(photo4.jpg);
+    background-size: cover;
+}
+
+.boxx4{
+    background-image: url(photo3.jpg);
+    background-size: cover;
+}
+
+.boxx5{
+    background-image: url(photo2.jpg);
+    background-size: cover;
+}
+
+.boxx6{
+    background-image: url(photo1.jpg);
+    background-size: cover;
+}
+
+.fot1{
+    height: 50px;
+    width: 300px;
+    background-color: gray;
+    margin: 20px;
+    display: flex;
+}
+
+.boxyz{
+    height: 390px;
+    width: 350px;
+    border: 2px solid #000000;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.last{
+display: flex;
+justify-content: space-evenly;
+background-color: gray;
+flex-wrap: wrap;
+}
+
+.abc{
+    height: 250px;
+    background-color: rgb(20, 59, 83);
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+}
+
+.xyz{
+    color: white;
+    text-align: center;
+    background-color: rgb(20, 59, 83);
+    width: 700px;
+    height: 80px;
+    margin-top: 80px;
+    font-size: 50px;   
+}
+
+@media (max-width: 768px) {
+    body {
+      font-size: 16px;
+      padding: 10px;
+    }
+    .nav {
+      width: 100%;
+      flex-direction: column;
+      height: 50px;
+    }
+    .box1 {
+        width: 5%;
+        font-size: 5px;
+        flex-direction: column;
+      }
+    .box2 {
+        width: 90%;
+        font-size: 5px;
+        margin: 0px;
+        padding: 0;
+        justify-content: none;
+        position: top;
+      }
+      .box3 {
+        width: 5%;
+        font-size: 5px;
+        flex-direction: column;
+      }
+     
+      .vv {
+        width: 90%;
+        flex-direction: column;
+        font-size: 10px;
+        position: static;
+        display: block;
+      }
+    .panel {
+        width: 100%;
+        flex-direction: column;
+      }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .box {
+      width: 95%; /* सानो स्क्रिनमा फुल-विथ */
+      padding: 15px;
+      font-size: 14px;
+    }
+  }

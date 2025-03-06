@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="form-title">Registration</h1>
+        <form id="myForm">
+            <div class="main-user-info">      
+                <div class="user-input-box">
+                    <label for="name">👤 नाम:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter Name">
+                    <span id="name-error" class="error"></span>
+                </div>
+                <div class="user-input-box">
+                    <label for="email">📧 इमेल:</label>
+                    <input type="text" id="email" name="email" placeholder="Enter Email">
+                    <span id="email-error" class="error"></span>
+                </div>
+                <div class="user-input-box">
+                    <label for="phone">📱 मोबाइल नम्बर:</label>
+                    <input type="text" id="phone" name="phone" placeholder="Enter Mobile Number">
+                    <span id="phone-error" class="error"></span>
+                </div>
+                <div class="user-input-box">
+                    <label for="password">🔒 पासवर्ड:</label>
+                    <input type="password" id="password" name="password" placeholder="Enter Password">
+                    <span id="password-error" class="error"></span>
+                </div>
+            </div>
+            <div class="hender-details-box">
+                <span class="gender-title">Gender</span>
+                <div class="gender-category">
+                    <input type="radio" name="gender" id="male" >
+                    <label for="male"> Male</label>
+                    <input type="radio" name="gender" id="female" >
+                    <label for="female"> Female</label>
+                    <input type="radio" name="gender" id="other" >
+                    <label for="other"> Other</label>
+                </div>
+            </div>
+            <div class="form-submit-btn">
+                <button type="submit"><a href="index.html" target="_blank">submit</a></button>
+            </div>
+            <div class="subash">
+                <button>JFT Nepal</button> 
+            </div>
+        </form>
+    </div>
+    <script src="form.js" ></script>
+</body>
+</html>
