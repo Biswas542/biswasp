@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan Foundation Test for Basic Japanese (JFT-Basic)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "MS Gothic", "Hiragino Sans", "Yu Gothic", sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Prometric CBT Header */
+        .cbt-header {
+            background-color: #2c5aa0;
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            height: 40px;
+            border-bottom: 1px solid #1e4080;
+        }
+
+        .test-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .time-display {
+            background-color: #1e4080;
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-family: "Courier New", monospace;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            background-color: #f8f8f8;
+            border-bottom: 2px solid #cccccc;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .current-section-display {
+            text-align: center;
+            padding: 8px 16px;
+            border-radius: 4px;
+            background-color: #2c5aa0;
+            color: white;
+        }
+
+        .current-section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .current-section-subtitle {
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        /* Main CBT Interface */
+        .cbt-container {
+            height: calc(100vh - 100px);
+            display: flex;
+            background-color: #e8e8e8;
+        }
+
+        /* Left Panel - Question Navigation */
+        .question-panel {
+            width: 180px;
+            background-color: #ffffff;
+            border-right: 2px solid #cccccc;
+            padding: 16px;
+            overflow-y: auto;
+            order: 1;
+        }
+
+        .section-header {
+            font-size: 12px;
+            font-weight: bold;
+            color: #2c5aa0;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .question-column {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .question-num {
+            width: 100%;
+            height: 28px;
+            border: 1px solid #666;
+            background-color: white;
+            text-align: center;
+            line-height: 26px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .question-num.current {
+            background-color: #2c5aa0;
+            color: white;
+        }
+
+        .question-num.answered {
+            background-color: #90EE90;
+            border-color: #32CD32;
+        }
+
+        .question-num.flagged {
+            background-color: #FFD700;
+            border-color: #FFA500;
+        }
+
+        .section-divider {
+            height: 1px;
+            background-color: #ccc;
+            margin: 8px 0;
+        }
+
+        /* Main Content Area */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            order: 2;
+        }
+
+        /* Question Header Bar */
+        .question-header {
+            background-color: #f8f8f8;
+            padding: 12px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .question-info {
+            font-weight: bold;
+        }
+
+        .section-name {
+            color: #2c5aa0;
+            font-size: 13px;
+        }
+
+        /* Language Toggle */
+        .language-selector {
+            display: flex;
+            border: 1px solid #999;
+            border-radius: 0;
+        }
+
+        .lang-btn {
+            padding: 6px 12px;
+            background-color: #f0f0f0;
+            border: none;
+            border-right: 1px solid #999;
+            cursor: pointer;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .lang-btn:last-child {
+            border-right: none;
+        }
+
+        .lang-btn.active {
+            background-color: #2c5aa0;
+            color: white;
+        }
+
+        /* Question Content */
+        .question-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .question-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .question-japanese {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #000;
+            font-family: "MS Gothic", "Yu Gothic", serif;
+        }
+
+        .question-english {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Audio Player */
+        .audio-section {
+            background-color: #e8f4f8;
+            border: 2px solid #4a90e2;
+            padding: 20px;
+            margin: 16px 0;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .audio-btn {
+            padding: 10px 20px;
+            background-color: #2c5aa0;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+
+        .audio-btn:hover {
+            background-color: #1e4080;
+        }
+
+        .audio-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Options */
+        .options-container {
+            margin-top: 24px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            cursor: pointer;
+            padding: 12px;
+            border: 1px solid #ddd;
+            background-color: #fafafa;
+            border-radius: 3px;
+        }
+
+        .option:hover {
+            background-color: #f0f8ff;
+            border-color: #2c5aa0;
+        }
+
+        .option.selected {
+            background-color: #e6f3ff;
+            border-color: #2c5aa0;
+            border-width: 2px;
+        }
+
+        .option-radio {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #666;
+            border-radius: 50%;
+            margin-right: 12px;
+            margin-top: 2px;
+            position: relative;
+            background-color: white;
+        }
+
+        .option.selected .option-radio {
+            border-color: #2c5aa0;
+        }
+
+        .option.selected .option-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: #2c5aa0;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        .option-jp {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            font-family: "MS Gothic", "Yu Gothic", serif;
+        }
+
+        .option-en {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Bottom Controls */
+        .cbt-controls {
+            background-color: #f0f0f0;
+            padding: 16px 24px;
+            border-top: 2px solid #cccccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .cbt-btn {
+            padding: 8px 24px;
+            background-color: #2c5aa0;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 3px;
+            min-width: 80px;
+        }
+
+        .cbt-btn:hover {
+            background-color: #1e4080;
+        }
+
+        .cbt-btn:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+
+        .cbt-btn.secondary {
+            background-color: #666;
+        }
+
+        .cbt-btn.secondary:hover {
+            background-color: #555;
+        }
+
+        .flag-btn {
+            background-color: #ff8c00;
+            padding: 6px 16px;
+            font-size: 12px;
+        }
+
+        .flag-btn:hover {
+            background-color: #e67300;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .question-panel {
+                width: 120px;
+            }
+            
+            .question-content {
+                padding: 16px;
+            }
+            
+            .cbt-controls {
+                padding: 12px 16px;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- CBT Header -->
+    <div class="cbt-header">
+        <div class="test-title">Japan Foundation Test for Basic Japanese (JFT-Basic)</div>
+        <div class="time-display" id="timeDisplay">60:00</div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="current-section-display" id="currentSectionDisplay">
+            <div class="current-section-title" id="navSectionTitle">Script & Vocabulary</div>
+            <div class="current-section-subtitle" id="navSectionSubtitle">Questions 1-12</div>
+        </div>
+    </div>
+
+    <!-- Main CBT Interface -->
+    <div class="cbt-container">
+        <!-- Left Question Navigation Panel -->
+        <div class="question-panel">
+            <div class="section-header">Section 1</div>
+            <div class="question-column" id="section1Column"></div>
+            <div class="section-divider"></div>
+            
+            <div class="section-header">Section 2</div>
+            <div class="question-column" id="section2Column"></div>
+            <div class="section-divider"></div>
+            
+            <div class="section-header">Section 3</div>
+            <div class="question-column" id="section3Column"></div>
+            <div class="section-divider"></div>
+            
+            <div class="section-header">Section 4</div>
+            <div class="question-column" id="section4Column"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-area" id="contentArea">
+            <!-- Question Header -->
+            <div class="question-header">
+                <div>
+                    <span class="question-info">Question <span id="currentNum">1</span> of 48</span>
+                    <div class="section-name" id="currentSection">Script and Vocabulary</div>
+                </div>
+                <div class="language-selector">
+                    <button class="lang-btn active" onclick="setLanguage('ja')">日本語</button>
+                    <button class="lang-btn" onclick="setLanguage('en')">English</button>
+                </div>
+            </div>
+
+            <!-- Question Content -->
+            <div class="question-content" id="questionContent">
+                <div class="question-text">
+                    <div class="question-japanese" id="questionJA">問題文がここに表示されます。</div>
+                    <div class="question-english" id="questionEN" style="display: none;">Question text will appear here.</div>
+                </div>
+
+                <!-- Audio Section (for listening questions) -->
+                <div class="audio-section" id="audioSection" style="display: none;">
+                    <div style="font-weight: bold; margin-bottom: 8px;">🎧 Audio</div>
+                    <div>Listen carefully and select the best answer.</div>
+                    <div class="audio-controls">
+                        <button class="audio-btn" onclick="playAudio()" id="playBtn">▶ Play</button>
+                        <button class="audio-btn" onclick="replayAudio()" id="replayBtn" disabled>🔁 Replay</button>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 12px; color: #666;">
+                        Audio can be played up to 2 times.
+                    </div>
+                </div>
+
+                <!-- Options -->
+                <div class="options-container" id="optionsContainer">
+                    <!-- Options populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="cbt-controls">
+                <div class="nav-buttons">
+                    <button class="cbt-btn secondary" onclick="previousQuestion()" id="prevBtn">◀ Previous</button>
+                    <button class="cbt-btn" onclick="nextQuestion()" id="nextBtn">Next ▶</button>
+                </div>
+                
+                <div style="display: flex; gap: 12px;">
+                    <button class="flag-btn cbt-btn" onclick="flagQuestion()" id="flagBtn">🏁 Flag</button>
+                    <button class="cbt-btn" onclick="submitTest()" id="submitBtn" style="background-color: #dc3545;">Submit Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Question Bank - 12 questions per section (48 total)
+        const questionBank = {
+            section1: [ // Script and Vocabulary (12 questions)
+                {
+                    questionJA: "「たべます」の意味として最も適切なものを選んでください。",
+                    questionEN: "Select the most appropriate meaning of 'たべます'.",
+                    Image:false,
+                    options: [
+                        {ja: "飲みます", en: "drink", correct: false},
+                        {ja: "食べます", en: "eat", correct: true},
+                        {ja: "寝ます", en: "sleep", correct: false},
+                       
+                    ]
+                },
+                {
+                    questionJA: "「はたらきます」の漢字として正しいものを選んでください。",
+                    questionEN: "Select the correct kanji for 'はたらきます'.",
+                    options: [
+                        {ja: "働きます", en: "work", correct: true},
+                        {ja: "動きます", en: "move", correct: false},
+                        {ja: "歩きます", en: "walk", correct: false},
+                        
+                    ]
+                },
+                {
+                    questionJA: "「あついです」の反対の意味を表す言葉を選んでください。",
+                    questionEN: "Select the word that means the opposite of 'あついです'.",
+                    
+                    options: [
+                        {ja: "さむいです", en: "cold", correct: true},
+                        {ja: "あたたかいです", en: "warm", correct: false},
+                        {ja: "すずしいです", en: "cool", correct: false},
+                        {ja: "あかるいです", en: "bright", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「やすみます」の意味として正しいものを選んでください。",
+                    questionEN: "Select the correct meaning of 'やすみます'.",
+                    options: [
+                        {ja: "休みます", en: "rest", correct: true},
+                        {ja: "急ぎます", en: "hurry", correct: false},
+                        {ja: "泣きます", en: "cry", correct: false},
+                        {ja: "笑います", en: "laugh", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「べんきょうします」を漢字で書くとどれですか。",
+                    questionEN: "How do you write 'べんきょうします' in kanji?",
+                    options: [
+                        {ja: "勉強します", en: "study", correct: true},
+                        {ja: "運動します", en: "exercise", correct: false},
+                        {ja: "仕事します", en: "work", correct: false},
+                        {ja: "買い物します", en: "shop", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「あさごはん」の意味として正しいものを選んでください。",
+                    questionEN: "Select the correct meaning of 'あさごはん'.",
+                    options: [
+                        {ja: "朝ごはん", en: "breakfast", correct: true},
+                        {ja: "昼ごはん", en: "lunch", correct: false},
+                        {ja: "夜ごはん", en: "dinner", correct: false},
+                        {ja: "おやつ", en: "snack", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「おおきいです」の反対の意味を表す言葉を選んでください。",
+                    questionEN: "Select the word that means the opposite of 'おおきいです'.",
+                    options: [
+                        {ja: "ちいさいです", en: "small", correct: true},
+                        {ja: "たかいです", en: "high/expensive", correct: false},
+                        {ja: "ひくいです", en: "low", correct: false},
+                        {ja: "やすいです", en: "cheap", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「みずうみ」を漢字で書くとどれですか。",
+                    questionEN: "How do you write 'みずうみ' in kanji?",
+                    options: [
+                        {ja: "湖", en: "lake", correct: true},
+                        {ja: "海", en: "sea", correct: false},
+                        {ja: "川", en: "river", correct: false},
+                        {ja: "池", en: "pond", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「かいしゃ」の意味として正しいものを選んでください。",
+                    questionEN: "Select the correct meaning of 'かいしゃ'.",
+                    options: [
+                        {ja: "会社", en: "company", correct: true},
+                        {ja: "学校", en: "school", correct: false},
+                        {ja: "病院", en: "hospital", correct: false},
+                        {ja: "銀行", en: "bank", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「あたらしいです」の反対の意味を表す言葉を選んでください。",
+                    questionEN: "Select the word that means the opposite of 'あたらしいです'.",
+                    options: [
+                        {ja: "ふるいです", en: "old", correct: true},
+                        {ja: "わかいです", en: "young", correct: false},
+                        {ja: "きれいです", en: "beautiful", correct: false},
+                        {ja: "おもしろいです", en: "interesting", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「やっきょく」を漢字で書くとどれですか。",
+                    questionEN: "How do you write 'やっきょく' in kanji?",
+                    options: [
+                        {ja: "薬局", en: "pharmacy", correct: true},
+                        {ja: "郵便局", en: "post office", correct: false},
+                        {ja: "警察", en: "police", correct: false},
+                        {ja: "消防署", en: "fire station", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「でんしゃ」の意味として正しいものを選んでください。",
+                    questionEN: "Select the correct meaning of 'でんしゃ'.",
+                    options: [
+                        {ja: "電車", en: "train", correct: true},
+                        {ja: "バス", en: "bus", correct: false},
+                        {ja: "タクシー", en: "taxi", correct: false},
+                        {ja: "飛行機", en: "airplane", correct: false}
+                    ]
+                }
+            ],
+            
+            section2: [ // Conversation and Expression (12 questions)
+                {
+                    questionJA: "A: 「今日は何時に起きましたか。」 B: 「＿＿＿＿起きました。」",
+                    questionEN: "A: 'What time did you wake up today?' B: 'I woke up at ____.'",
+                    options: [
+                        {ja: "7時に", en: "at 7 o'clock", correct: true},
+                        {ja: "7時を", en: "7 o'clock (object)", correct: false},
+                        {ja: "7時で", en: "by 7 o'clock", correct: false},
+                        {ja: "7時が", en: "7 o'clock (subject)", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "店員: 「いらっしゃいませ。」 客: 「＿＿＿＿」",
+                    questionEN: "Store clerk: 'Welcome!' Customer: '____'",
+                    options: [
+                        {ja: "ありがとうございます", en: "Thank you", correct: false},
+                        {ja: "すみません、これをください", en: "Excuse me, I'll take this", correct: true},
+                        {ja: "さようなら", en: "Goodbye", correct: false},
+                        {ja: "おはようございます", en: "Good morning", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「私は学校＿＿行きます。」正しい助詞を選んでください。",
+                    questionEN: "'I go ___ school.' Select the correct particle.",
+                    options: [
+                        {ja: "に", en: "to", correct: true},
+                        {ja: "を", en: "object marker", correct: false},
+                        {ja: "で", en: "at/by", correct: false},
+                        {ja: "から", en: "from", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "A: 「お疲れ様でした。」 B: 「＿＿＿＿」",
+                    questionEN: "A: 'Good job today.' B: '____'",
+                    options: [
+                        {ja: "お疲れ様でした", en: "Good job to you too", correct: true},
+                        {ja: "いただきます", en: "Thank you for the food", correct: false},
+                        {ja: "いってきます", en: "I'm going", correct: false},
+                        {ja: "ただいま", en: "I'm home", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「明日雨＿＿降ります。」正しい助詞を選んでください。",
+                    questionEN: "'Tomorrow it ___ rain.' Select the correct particle.",
+                    options: [
+                        {ja: "が", en: "subject marker", correct: true},
+                        {ja: "を", en: "object marker", correct: false},
+                        {ja: "に", en: "to", correct: false},
+                        {ja: "で", en: "at", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "A: 「すみません、駅はどこですか。」 B: 「あそこ＿＿あります。」",
+                    questionEN: "A: 'Excuse me, where is the station?' B: 'It's over there ___.'",
+                    options: [
+                        {ja: "に", en: "at/in", correct: true},
+                        {ja: "を", en: "object marker", correct: false},
+                        {ja: "で", en: "at/by", correct: false},
+                        {ja: "から", en: "from", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「昨日友達＿＿映画を見ました。」正しい助詞を選んでください。",
+                    questionEN: "'Yesterday I watched a movie ___ my friend.' Select the correct particle.",
+                    options: [
+                        {ja: "と", en: "with", correct: true},
+                        {ja: "に", en: "to/at", correct: false},
+                        {ja: "で", en: "at/by", correct: false},
+                        {ja: "を", en: "object marker", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "A: 「いただきます。」 B: 「＿＿＿＿」",
+                    questionEN: "A: 'Thank you for the food.' B: '____'",
+                    options: [
+                        {ja: "どうぞ", en: "Please go ahead", correct: true},
+                        {ja: "ごちそうさま", en: "Thank you for the meal", correct: false},
+                        {ja: "すみません", en: "Excuse me", correct: false},
+                        {ja: "はじめまして", en: "Nice to meet you", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「コーヒー＿＿飲みます。」正しい助詞を選んでください。",
+                    questionEN: "'I drink coffee ___.' Select the correct particle.",
+                    options: [
+                        {ja: "を", en: "object marker", correct: true},
+                        {ja: "に", en: "to/at", correct: false},
+                        {ja: "で", en: "at/by", correct: false},
+                        {ja: "が", en: "subject marker", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "A: 「失礼します。」 B: 「＿＿＿＿」",
+                    questionEN: "A: 'Excuse me (leaving).' B: '____'",
+                    options: [
+                        {ja: "お疲れ様でした", en: "Good job today", correct: true},
+                        {ja: "いらっしゃいませ", en: "Welcome", correct: false},
+                        {ja: "おはようございます", en: "Good morning", correct: false},
+                        {ja: "いただきます", en: "Thank you for the food", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "「図書館＿＿本を借ります。」正しい助詞を選んでください。",
+                    questionEN: "'I borrow books ___ the library.' Select the correct particle.",
+                    options: [
+                        {ja: "で", en: "at", correct: true},
+                        {ja: "に", en: "to", correct: false},
+                        {ja: "を", en: "object marker", correct: false},
+                        {ja: "から", en: "from", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "A: 「おかえりなさい。」 B: 「＿＿＿＿」",
+                    questionEN: "A: 'Welcome back.' B: '____'",
+                    options: [
+                        {ja: "ただいま", en: "I'm back", correct: true},
+                        {ja: "いってきます", en: "I'm going", correct: false},
+                        {ja: "おやすみなさい", en: "Good night", correct: false},
+                        {ja: "おめでとうございます", en: "Congratulations", correct: false}
+                    ]
+                }
+            ],
+            
+            section3: [ // Listening (12 questions)
+                {
+                    questionJA: "音声を聞いて、男の人は何時に会社に行きますか。",
+                    questionEN: "Listen to the audio. What time does the man go to the company?",
+                    hasAudio: true,
+                    audioText: "audio.mp3",
+                    options: [
+                        {ja: "7時", en: "7 o'clock", correct: false},
+                        {ja: "8時", en: "8 o'clock", correct: true},
+                        {ja: "9時", en: "9 o'clock", correct: false},
+                        {ja: "10時", en: "10 o'clock", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "女の人は何を買いに行きますか。",
+                    questionEN: "What is the woman going to buy?",
+                    hasAudio: true,
+                    audioText: "スーパーでパンと牛乳を買います。",
+                    options: [
+                        {ja: "パンと牛乳", en: "bread and milk", correct: true},
+                        {ja: "肉と野菜", en: "meat and vegetables", correct: false},
+                        {ja: "お米とお茶", en: "rice and tea", correct: false},
+                        {ja: "魚と卵", en: "fish and eggs", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "音声を聞いて、今日の天気はどうですか。",
+                    questionEN: "Listen to the audio. How is today's weather?",
+                    hasAudio: true,
+                    audioText: "今日はとても暑いです。",
+                    options: [
+                        {ja: "暑いです", en: "hot", correct: true},
+                        {ja: "寒いです", en: "cold", correct: false},
+                        {ja: "雨です", en: "rainy", correct: false},
+                        {ja: "雪です", en: "snowy", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "男の人はどこで昼ごはんを食べますか。",
+                    questionEN: "Where does the man eat lunch?",
+                    hasAudio: true,
+                    audioText: "会社の食堂で昼ごはんを食べます。",
+                    options: [
+                        {ja: "会社の食堂", en: "company cafeteria", correct: true},
+                        {ja: "レストラン", en: "restaurant", correct: false},
+                        {ja: "家", en: "home", correct: false},
+                        {ja: "コンビニ", en: "convenience store", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "女の人は何時に寝ますか。",
+                    questionEN: "What time does the woman go to sleep?",
+                    hasAudio: true,
+                    audioText: "毎晩11時に寝ます。",
+                    options: [
+                        {ja: "10時", en: "10 o'clock", correct: false},
+                        {ja: "11時", en: "11 o'clock", correct: true},
+                        {ja: "12時", en: "12 o'clock", correct: false},
+                        {ja: "9時", en: "9 o'clock", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "音声を聞いて、男の人の趣味は何ですか。",
+                    questionEN: "Listen to the audio. What is the man's hobby?",
+                    hasAudio: true,
+                    audioText: "私の趣味は読書です。毎日本を読みます。",
+                    options: [
+                        {ja: "読書", en: "reading", correct: true},
+                        {ja: "映画", en: "movies", correct: false},
+                        {ja: "音楽", en: "music", correct: false},
+                        {ja: "スポーツ", en: "sports", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "女の人はどこに住んでいますか。",
+                    questionEN: "Where does the woman live?",
+                    hasAudio: true,
+                    audioText: "私は東京に住んでいます。",
+                    options: [
+                        {ja: "東京", en: "Tokyo", correct: true},
+                        {ja: "大阪", en: "Osaka", correct: false},
+                        {ja: "京都", en: "Kyoto", correct: false},
+                        {ja: "横浜", en: "Yokohama", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "音声を聞いて、男の人は何を飲みましたか。",
+                    questionEN: "Listen to the audio. What did the man drink?",
+                    hasAudio: true,
+                    audioText: "朝はいつもコーヒーを飲みます。",
+                    options: [
+                        {ja: "コーヒー", en: "coffee", correct: true},
+                        {ja: "お茶", en: "tea", correct: false},
+                        {ja: "水", en: "water", correct: false},
+                        {ja: "ジュース", en: "juice", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "女の人はいつ日本に来ましたか。",
+                    questionEN: "When did the woman come to Japan?",
+                    hasAudio: true,
+                    audioText: "私は去年の4月に日本に来ました。",
+                    options: [
+                        {ja: "去年の4月", en: "April last year", correct: true},
+                        {ja: "今年の4月", en: "April this year", correct: false},
+                        {ja: "去年の3月", en: "March last year", correct: false},
+                        {ja: "今年の3月", en: "March this year", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "音声を聞いて、男の人は何曜日に休みますか。",
+                    questionEN: "Listen to the audio. What day of the week does the man rest?",
+                    hasAudio: true,
+                    audioText: "私は日曜日に休みます。",
+                    options: [
+                        {ja: "日曜日", en: "Sunday", correct: true},
+                        {ja: "土曜日", en: "Saturday", correct: false},
+                        {ja: "月曜日", en: "Monday", correct: false},
+                        {ja: "金曜日", en: "Friday", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "女の人は何歳ですか。",
+                    questionEN: "How old is the woman?",
+                    hasAudio: true,
+                    audioText: "私は25歳です。",
+                    options: [
+                        {ja: "25歳", en: "25 years old", correct: true},
+                        {ja: "23歳", en: "23 years old", correct: false},
+                        {ja: "27歳", en: "27 years old", correct: false},
+                        {ja: "24歳", en: "24 years old", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "音声を聞いて、男の人の家族は何人ですか。",
+                    questionEN: "Listen to the audio. How many people are in the man's family?",
+                    hasAudio: true,
+                    audioText: "私の家族は4人です。父、母、妹と私です。",
+                    options: [
+                        {ja: "4人", en: "4 people", correct: true},
+                        {ja: "3人", en: "3 people", correct: false},
+                        {ja: "5人", en: "5 people", correct: false},
+                        {ja: "2人", en: "2 people", correct: false}
+                    ]
+                }
+            ],
+            
+            section4: [ // Reading (12 questions)
+                {
+                    questionJA: "次の文を読んで答えてください。\n「田中さんは毎朝6時に起きて、7時に朝ごはんを食べます。8時に家を出て、9時に会社に着きます。」\n田中さんは何時に家を出ますか。",
+                    questionEN: "Read the following text and answer.\n'Mr. Tanaka wakes up at 6 AM every morning, eats breakfast at 7 AM. He leaves home at 8 AM and arrives at the company at 9 AM.'\nWhat time does Mr. Tanaka leave home?",
+                    options: [
+                        {ja: "7時", en: "7 o'clock", correct: false},
+                        {ja: "8時", en: "8 o'clock", correct: true},
+                        {ja: "9時", en: "9 o'clock", correct: false},
+                        {ja: "6時", en: "6 o'clock", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "病院の案内を読んで答えてください。\n「受付時間：月〜金 9:00-17:00、土 9:00-12:00、日曜日は休み」\n土曜日は何時まで受付していますか。",
+                    questionEN: "Read the hospital information and answer.\n'Reception hours: Mon-Fri 9:00-17:00, Sat 9:00-12:00, Closed on Sunday'\nUntil what time is reception open on Saturday?",
+                    options: [
+                        {ja: "12時", en: "12 o'clock", correct: true},
+                        {ja: "17時", en: "17 o'clock", correct: false},
+                        {ja: "9時", en: "9 o'clock", correct: false},
+                        {ja: "休み", en: "closed", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "メモを読んでください。\n「スーパーでりんご、バナナ、牛乳、パンを買う。薬局で薬を買う。」\nスーパーで買うものはいくつありますか。",
+                    questionEN: "Read the memo.\n'Buy apples, bananas, milk, and bread at the supermarket. Buy medicine at the pharmacy.'\nHow many items should be bought at the supermarket?",
+                    options: [
+                        {ja: "3つ", en: "3 items", correct: false},
+                        {ja: "4つ", en: "4 items", correct: true},
+                        {ja: "5つ", en: "5 items", correct: false},
+                        {ja: "2つ", en: "2 items", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "電車の案内を読んでください。\n「この電車は新宿、渋谷、品川の順番で停まります。」\n渋谷の次はどこですか。",
+                    questionEN: "Read the train announcement.\n'This train stops at Shinjuku, Shibuya, and Shinagawa in that order.'\nWhat is the next stop after Shibuya?",
+                    options: [
+                        {ja: "新宿", en: "Shinjuku", correct: false},
+                        {ja: "品川", en: "Shinagawa", correct: true},
+                        {ja: "東京", en: "Tokyo", correct: false},
+                        {ja: "池袋", en: "Ikebukuro", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "レストランのメニューを見てください。\n「ラーメン 800円、カレー 900円、定食 1200円」\n一番安い料理はどれですか。",
+                    questionEN: "Look at the restaurant menu.\n'Ramen 800 yen, Curry 900 yen, Set meal 1200 yen'\nWhich dish is the cheapest?",
+                    options: [
+                        {ja: "ラーメン", en: "Ramen", correct: true},
+                        {ja: "カレー", en: "Curry", correct: false},
+                        {ja: "定食", en: "Set meal", correct: false},
+                        {ja: "全部同じ", en: "All the same", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "次の文を読んで答えてください。\n「山田さんは毎週火曜日と木曜日にテニスをします。土曜日は友達と映画を見ます。」\n山田さんは週に何回テニスをしますか。",
+                    questionEN: "Read the following text and answer.\n'Mr. Yamada plays tennis every Tuesday and Thursday. On Saturday he watches movies with friends.'\nHow many times a week does Mr. Yamada play tennis?",
+                    options: [
+                        {ja: "1回", en: "1 time", correct: false},
+                        {ja: "2回", en: "2 times", correct: true},
+                        {ja: "3回", en: "3 times", correct: false},
+                        {ja: "4回", en: "4 times", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "図書館の案内を読んでください。\n「開館時間：平日 9:00-20:00、土日 10:00-18:00、祝日は休館」\n日曜日の開館時間は何時からですか。",
+                    questionEN: "Read the library information.\n'Opening hours: Weekdays 9:00-20:00, Weekends 10:00-18:00, Closed on holidays'\nWhat time does the library open on Sunday?",
+                    options: [
+                        {ja: "9時", en: "9 o'clock", correct: false},
+                        {ja: "10時", en: "10 o'clock", correct: true},
+                        {ja: "18時", en: "18 o'clock", correct: false},
+                        {ja: "20時", en: "20 o'clock", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "次の文を読んで答えてください。\n「佐藤さんは車で会社に行きます。家から会社まで30分かかります。」\n佐藤さんは何で会社に行きますか。",
+                    questionEN: "Read the following text and answer.\n'Mr. Sato goes to work by car. It takes 30 minutes from home to the company.'\nHow does Mr. Sato go to work?",
+                    options: [
+                        {ja: "車", en: "car", correct: true},
+                        {ja: "電車", en: "train", correct: false},
+                        {ja: "バス", en: "bus", correct: false},
+                        {ja: "自転車", en: "bicycle", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "店の看板を読んでください。\n「営業時間：午前11時〜午後9時、定休日：月曜日」\nこの店はいつ休みですか。",
+                    questionEN: "Read the store sign.\n'Business hours: 11 AM - 9 PM, Regular holiday: Monday'\nWhen is this store closed?",
+                    options: [
+                        {ja: "月曜日", en: "Monday", correct: true},
+                        {ja: "日曜日", en: "Sunday", correct: false},
+                        {ja: "土曜日", en: "Saturday", correct: false},
+                        {ja: "火曜日", en: "Tuesday", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "次の文を読んで答えてください。\n「今日は雨が降っています。傘を持って出かけましょう。」\n今日の天気はどうですか。",
+                    questionEN: "Read the following text and answer.\n'It is raining today. Let's take an umbrella when we go out.'\nHow is today's weather?",
+                    options: [
+                        {ja: "雨", en: "rainy", correct: true},
+                        {ja: "晴れ", en: "sunny", correct: false},
+                        {ja: "曇り", en: "cloudy", correct: false},
+                        {ja: "雪", en: "snowy", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "アパートの案内を読んでください。\n「家賃：月8万円、敷金：2ヶ月分、礼金：1ヶ月分」\n敷金はいくらですか。",
+                    questionEN: "Read the apartment information.\n'Rent: 80,000 yen per month, Deposit: 2 months' worth, Key money: 1 month's worth'\nHow much is the deposit?",
+                    options: [
+                        {ja: "8万円", en: "80,000 yen", correct: false},
+                        {ja: "16万円", en: "160,000 yen", correct: true},
+                        {ja: "24万円", en: "240,000 yen", correct: false},
+                        {ja: "32万円", en: "320,000 yen", correct: false}
+                    ]
+                },
+                {
+                    questionJA: "次の文を読んで答えてください。\n「私は毎朝コーヒーを飲みます。でも、夜はお茶を飲みます。」\nこの人は夜何を飲みますか。",
+                    questionEN: "Read the following text and answer.\n'I drink coffee every morning. But at night I drink tea.'\nWhat does this person drink at night?",
+                    options: [
+                        {ja: "コーヒー", en: "coffee", correct: false},
+                        {ja: "お茶", en: "tea", correct: true},
+                        {ja: "水", en: "water", correct: false},
+                        {ja: "ジュース", en: "juice", correct: false}
+                    ]
+                }
+            ]
+        };
+
+        // Section information
+        const sectionInfo = [
+            {title: "Script & Vocabulary", subtitle: "Questions 1-12"},
+            {title: "Conversation & Expression", subtitle: "Questions 13-24"},
+            {title: "Listening", subtitle: "Questions 25-36"},
+            {title: "Reading", subtitle: "Questions 37-48"}
+        ];
+
+        // Generate full 48 questions (12 per section)
+        function generateFullQuestionSet() {
+            const fullQuestions = [];
+            
+            Object.keys(questionBank).forEach((section, sectionIndex) => {
+                questionBank[section].forEach((question, questionIndex) => {
+                    const questionCopy = { ...question };
+                    questionCopy.section = sectionIndex + 1;
+                    questionCopy.sectionName = ['Script and Vocabulary', 'Conversation and Expression', 'Listening', 'Reading'][sectionIndex];
+                    fullQuestions.push(questionCopy);
+                });
+            });
+            
+            return fullQuestions;
+        }
+
+        // Global variables
+        let questions = generateFullQuestionSet();
+        let currentQuestion = 0;
+        let userAnswers = new Array(48).fill(null);
+        let flaggedQuestions = new Set();
+        let timeLeft = 3600; // 60 minutes (1 hour)
+        let currentLang = 'ja';
+        let timerInterval;
+        let audioPlayCount = {};
+
+        // Initialize
+        function initTest() {
+            createQuestionNavigation();
+            loadQuestion(0);
+            startTimer();
+            updateNavigationBar(0);
+        }
+
+        function createQuestionNavigation() {
+            const columns = ['section1Column', 'section2Column', 'section3Column', 'section4Column'];
+            
+            columns.forEach((columnId, sectionIndex) => {
+                const column = document.getElementById(columnId);
+                column.innerHTML = '';
+                
+                for(let i = 0; i < 12; i++) {
+                    const questionNum = (sectionIndex * 12) + i;
+                    const btn = document.createElement('div');
+                    btn.className = 'question-num';
+                    btn.textContent = questionNum + 1;
+                    btn.onclick = () => changeQuestionWithConfirmation(questionNum);
+                    column.appendChild(btn);
+                }
+            });
+        }
+
+        function updateNavigationBar(questionIndex) {
+            const sectionIndex = Math.floor(questionIndex / 12);
+            document.getElementById('navSectionTitle').textContent = sectionInfo[sectionIndex].title;
+            document.getElementById('navSectionSubtitle').textContent = sectionInfo[sectionIndex].subtitle;
+        }
+
+        function changeQuestionWithConfirmation(targetQuestionIndex) {
+            const targetSection = Math.floor(targetQuestionIndex / 12);
+            const currentSection = Math.floor(currentQuestion / 12);
+            
+            if(targetSection !== currentSection) {
+                showSectionChangeConfirmation(targetQuestionIndex);
+            } else {
+                loadQuestion(targetQuestionIndex);
+            }
+        }
+
+        function showSectionChangeConfirmation(targetQuestionIndex) {
+            const targetSection = Math.floor(targetQuestionIndex / 12);
+            const sectionName = sectionInfo[targetSection].title;
+            
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                z-index: 1500;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            popup.innerHTML = `
+                <div style="
+                    background: white;
+                    padding: 40px;
+                    border-radius: 8px;
+                    text-align: center;
+                    border: 3px solid #2c5aa0;
+                    max-width: 450px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                ">
+                    <div style="color: #2c5aa0; font-size: 20px; font-weight: bold; margin-bottom: 20px;">
+                        Section Change Confirmation
+                    </div>
+                    <div style="font-size: 16px; margin-bottom: 25px; line-height: 1.5;">
+                        You are about to move to:<br>
+                        <strong>${sectionName}</strong><br>
+                        <span style="color: #666; font-size: 14px;">(Question ${targetQuestionIndex + 1})</span>
+                    </div>
+                    <div style="background: #f0f8ff; padding: 15px; border-radius: 6px; margin-bottom: 25px; font-size: 14px; color: #555;">
+                        ⚠ Make sure you have completed all questions in the current section before proceeding.
+                    </div>
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
+                            background: #666;
+                            color: white;
+                            border: none;
+                            padding: 12px 25px;
+                            border-radius: 4px;
+                            font-size: 14px;
+                            cursor: pointer;
+                        ">Cancel</button>
+                        <button onclick="loadQuestion(${targetQuestionIndex}); this.parentElement.parentElement.parentElement.remove();" style="
+                            background: #2c5aa0;
+                            color: white;
+                            border: none;
+                            padding: 12px 25px;
+                            border-radius: 4px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                        ">Continue</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(popup);
+        }
+
+        function loadQuestion(index) {
+            currentQuestion = index;
+            const question = questions[index];
+            
+            // Update header
+            document.getElementById('currentNum').textContent = index + 1;
+            document.getElementById('currentSection').textContent = question.sectionName;
+            
+            // Update navigation bar
+            updateNavigationBar(index);
+            
+            // Update navigation highlighting
+            updateNavigationHighlight();
+            
+            // Load question text
+            document.getElementById('questionJA').textContent = question.questionJA;
+            document.getElementById('questionEN').textContent = question.questionEN;
+            
+            // Show/hide audio section
+            const audioSection = document.getElementById('audioSection');
+            if(question.hasAudio) {
+                audioSection.style.display = 'block';
+                if(!audioPlayCount[index]) {
+                    audioPlayCount[index] = 0;
+                }
+                updateAudioButtons(index);
+            } else {
+                audioSection.style.display = 'none';
+            }
+            
+            // Load options
+            loadOptions(question.options);
+            
+            // Update buttons
+            updateControlButtons();
+            
+            // Set language display
+            setLanguage(currentLang);
+        }
+
+        function loadOptions(options) {
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+            
+            options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                if(userAnswers[currentQuestion] === index) {
+                    optionDiv.classList.add('selected');
+                }
+                
+                optionDiv.innerHTML = `
+                    <div class="option-radio"></div>
+                    <div class="option-text">
+                        <div class="option-jp">${option.ja}</div>
+                        <div class="option-en" style="display: ${currentLang === 'en' ? 'block' : 'none'};">${option.en}</div>
+                    </div>
+                `;
+                
+                optionDiv.onclick = () => selectAnswer(index);
+                container.appendChild(optionDiv);
+            });
+        }
+
+        function selectAnswer(answerIndex) {
+            // Clear previous selection
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Select new answer
+            document.querySelectorAll('.option')[answerIndex].classList.add('selected');
+            
+            // Store answer
+            userAnswers[currentQuestion] = answerIndex;
+            
+            // Update navigation
+            updateNavigationHighlight();
+        }
+
+        function updateNavigationHighlight() {
+            document.querySelectorAll('.question-num').forEach((btn, index) => {
+                btn.classList.remove('current', 'answered', 'flagged');
+                
+                if(index === currentQuestion) {
+                    btn.classList.add('current');
+                } else if(userAnswers[index] !== null) {
+                    btn.classList.add('answered');
+                }
+                
+                if(flaggedQuestions.has(index)) {
+                    btn.classList.add('flagged');
+                }
+            });
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const jaElements = document.querySelectorAll('.question-japanese, .option-jp');
+            const enElements = document.querySelectorAll('.question-english, .option-en');
+            const langBtns = document.querySelectorAll('.lang-btn');
+            
+            langBtns.forEach(btn => btn.classList.remove('active'));
+            
+            if(lang === 'ja') {
+                jaElements.forEach(el => el.style.display = 'block');
+                enElements.forEach(el => el.style.display = 'none');
+                langBtns[0].classList.add('active');
+            } else {
+                jaElements.forEach(el => el.style.display = 'none');
+                enElements.forEach(el => el.style.display = 'block');
+                langBtns[1].classList.add('active');
+            }
+        }
+
+        function playAudio() {
+            const question = questions[currentQuestion];
+            if(question.hasAudio && audioPlayCount[currentQuestion] < 2) {
+                audioPlayCount[currentQuestion]++;
+                
+                showAudioPopup(question.audioText || "Sample audio content");
+                updateAudioButtons(currentQuestion);
+            }
+        }
+
+        function replayAudio() {
+            playAudio();
+        }
+
+        function showAudioPopup(audioText) {
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border: 3px solid #2c5aa0;
+                padding: 30px;
+                border-radius: 8px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 1000;
+                min-width: 400px;
+                text-align: center;
+            `;
+            
+            popup.innerHTML = `
+                <div style="color: #2c5aa0; font-size: 18px; font-weight: bold; margin-bottom: 20px;">🎧 Audio Playing</div>
+                <div style="background: #f0f8ff; padding: 20px; border-radius: 6px; margin: 15px 0; font-size: 16px; border: 1px solid #ddd;">
+                    "${audioText}"
+                </div>
+                <div style="margin: 20px 0; color: #666; font-size: 14px;">
+                    Audio duration: 3 seconds<br>
+                    Remaining plays: ${2 - audioPlayCount[currentQuestion]}
+                </div>
+                <button onclick="this.parentElement.remove()" style="
+                    background: #2c5aa0; 
+                    color: white; 
+                    border: none; 
+                    padding: 10px 25px; 
+                    border-radius: 4px; 
+                    cursor: pointer;
+                    font-size: 14px;
+                    font-weight: bold;
+                ">Close</button>
+            `;
+            
+            document.body.appendChild(popup);
+            
+            // Auto close after 3 seconds
+            setTimeout(() => {
+                if(popup.parentElement) {
+                    popup.remove();
+                }
+            }, 3000);
+        }
+
+        function updateAudioButtons(questionIndex) {
+            const playBtn = document.getElementById('playBtn');
+            const replayBtn = document.getElementById('replayBtn');
+            const playCount = audioPlayCount[questionIndex] || 0;
+            
+            playBtn.disabled = playCount >= 2;
+            replayBtn.disabled = playCount === 0 || playCount >= 2;
+            
+            playBtn.textContent = playCount === 0 ? '▶ Play' : '▶ Play Again';
+            replayBtn.textContent = `🔁 Replay (${2 - playCount} left)`;
+        }
+
+        function nextQuestion() {
+            if(currentQuestion < 47) {
+                changeQuestionWithConfirmation(currentQuestion + 1);
+            }
+        }
+
+        function previousQuestion() {
+            if(currentQuestion > 0) {
+                changeQuestionWithConfirmation(currentQuestion - 1);
+            }
+        }
+
+        function flagQuestion() {
+            if(flaggedQuestions.has(currentQuestion)) {
+                flaggedQuestions.delete(currentQuestion);
+                document.getElementById('flagBtn').textContent = '🏁 Flag';
+                document.getElementById('flagBtn').style.backgroundColor = '#ff8c00';
+            } else {
+                flaggedQuestions.add(currentQuestion);
+                document.getElementById('flagBtn').textContent = '🏁 Unflag';
+                document.getElementById('flagBtn').style.backgroundColor = '#dc3545';
+            }
+            updateNavigationHighlight();
+        }
+
+        function updateControlButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const flagBtn = document.getElementById('flagBtn');
+            
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.disabled = currentQuestion === 47;
+            
+            // Update flag button
+            if(flaggedQuestions.has(currentQuestion)) {
+                flagBtn.textContent = '🏁 Unflag';
+                flagBtn.style.backgroundColor = '#dc3545';
+            } else {
+                flagBtn.textContent = '🏁 Flag';
+                flagBtn.style.backgroundColor = '#ff8c00';
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimeDisplay();
+                
+                if(timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showTimeUpPopup();
+                }
+            }, 1000);
+        }
+
+        function updateTimeDisplay() {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+            
+            const display = hours > 0 
+                ? `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+                : `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+            document.getElementById('timeDisplay').textContent = display;
+            
+            // Warning colors
+            if(timeLeft <= 300) { // Last 5 minutes
+                document.getElementById('timeDisplay').style.backgroundColor = '#dc3545';
+            } else if(timeLeft <= 600) { // Last 10 minutes
+                document.getElementById('timeDisplay').style.backgroundColor = '#ff8c00';
+            }
+        }
+
+        function showTimeUpPopup() {
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            popup.innerHTML = `
+                <div style="
+                    background: white;
+                    padding: 50px;
+                    border-radius: 10px;
+                    text-align: center;
+                    border: 4px solid #dc3545;
+                    max-width: 500px;
+                ">
+                    <div style="color: #dc3545; font-size: 24px; font-weight: bold; margin-bottom: 20px;">
+                        ⏰ TIME UP!
+                    </div>
+                    <div style="font-size: 18px; margin-bottom: 30px; line-height: 1.5;">
+                        The test time has expired.<br>
+                        Your answers will be automatically submitted.
+                    </div>
+                    <button onclick="submitTest(); this.parentElement.parentElement.remove();" style="
+                        background: #dc3545;
+                        color: white;
+                        border: none;
+                        padding: 15px 30px;
+                        border-radius: 6px;
+                        font-size: 16px;
+                        font-weight: bold;
+                        cursor: pointer;
+                    ">Submit Test</button>
+                </div>
+            `;
+            
+            document.body.appendChild(popup);
+        }
+
+        function submitTest() {
+            showSubmitConfirmation();
+        }
+
+        function showSubmitConfirmation() {
+            const unanswered = userAnswers.filter(answer => answer === null).length;
+            
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                z-index: 1500;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            popup.innerHTML = `
+                <div style="
+                    background: white;
+                    padding: 40px;
+                    border-radius: 8px;
+                    text-align: center;
+                    border: 3px solid #2c5aa0;
+                    max-width: 450px;
+                ">
+                    <div style="color: #2c5aa0; font-size: 20px; font-weight: bold; margin-bottom: 25px;">
+                        Submit Test Confirmation
+                    </div>
+                    <div style="font-size: 16px; margin-bottom: 20px; line-height: 1.5;">
+                        You have answered <strong>${48 - unanswered}</strong> out of <strong>48</strong> questions.
+                        ${unanswered > 0 ? `<br><br><span style="color: #dc3545;">⚠ ${unanswered} questions remain unanswered.</span>` : ''}
+                    </div>
+                    <div style="margin-bottom: 25px; font-size: 14px; color: #666;">
+                        Once submitted, you cannot return to the test.
+                    </div>
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
+                            background: #666;
+                            color: white;
+                            border: none;
+                            padding: 12px 25px;
+                            border-radius: 4px;
+                            font-size: 14px;
+                            cursor: pointer;
+                        ">Cancel</button>
+                        <button onclick="finalSubmit(); this.parentElement.parentElement.parentElement.remove();" style="
+                            background: #dc3545;
+                            color: white;
+                            border: none;
+                            padding: 12px 25px;
+                            border-radius: 4px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                        ">Submit Test</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(popup);
+        }
+
+        function finalSubmit() {
+            clearInterval(timerInterval);
+            
+            // Calculate scores
+            const scores = [0, 0, 0, 0]; // Section scores
+            let totalCorrect = 0;
+            
+            questions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                if(userAnswer !== null && question.options[userAnswer].correct) {
+                    scores[question.section - 1]++;
+                    totalCorrect++;
+                }
+            });
+            
+            // Store results in localStorage for result pages
+            const resultData = {
+                totalScore: totalCorrect,
+                totalQuestions: 48,
+                percentage: Math.round((totalCorrect / 48) * 100),
+                sectionScores: scores,
+                sectionTotals: [12, 12, 12, 12],
+                passed: Math.round((totalCorrect / 48) * 100) >= 70,
+                completionTime: new Date().toLocaleString('ja-JP'),
+                sessionId: 'JFT-' + Date.now().toString().slice(-8)
+            };
+            
+            localStorage.setItem('jftResults', JSON.stringify(resultData));
+            
+            // Redirect to appropriate result page
+            if(resultData.passed) {
+                window.location.href = 'pass.html';
+            } else {
+                window.location.href = 'fail.html';
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if(e.ctrlKey || e.altKey) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    previousQuestion();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    nextQuestion();
+                    break;
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                    e.preventDefault();
+                    const optionIndex = parseInt(e.key) - 1;
+                    if(optionIndex < 4) {
+                        selectAnswer(optionIndex);
+                    }
+                    break;
+                case 'f':
+                case 'F':
+                    e.preventDefault();
+                    flagQuestion();
+                    break;
+            }
+        });
+
+        // Prevent right-click and other shortcuts
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+        document.addEventListener('dragstart', e => e.preventDefault());
+
+        // Disable F5, Ctrl+R, etc.
+        document.addEventListener('keydown', function(e) {
+            if(e.key === 'F5' || 
+               (e.ctrlKey && e.key === 'r') || 
+               (e.ctrlKey && e.key === 'R') ||
+               (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+               (e.key === 'F12')) {
+                e.preventDefault();
+                showWarningPopup('Function disabled during test');
+            }
+        });
+
+        function showWarningPopup(message) {
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #ff4444;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 6px;
+                z-index: 2000;
+                font-weight: bold;
+                box-shadow: 0 4px 15px rgba(255,68,68,0.3);
+            `;
+            popup.textContent = `⚠ ${message}`;
+            document.body.appendChild(popup);
+            
+            setTimeout(() => popup.remove(), 3000);
+        }
+
+        // Window visibility warning
+        document.addEventListener('visibilitychange', function() {
+            if(document.hidden) {
+                showWarningPopup('Test window lost focus - Please return to test');
+            }
+        });
+
+        // Initialize the test when page loads
+        window.onload = initTest;
+    </script>
+</body>
+</html>
